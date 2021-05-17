@@ -9,12 +9,13 @@ import { getSelectedOperation, opsList } from "./selectedOp";
 const Wasabee = window.plugin.wasabee;
 
 //** This function draws things on the layers */
-export function drawMap(ev) {
-  // console.debug(ev);
+export function drawMap() {
   const operation = getSelectedOperation();
   updateAnchors(operation);
   updateMarkers(operation);
   resetLinks(operation);
+  // XXX do not do this here, make a special hook for it, this won't change often
+  resetZones(operation);
 }
 
 function updateMarkers(op) {
@@ -135,6 +136,14 @@ export function drawBackgroundOp(operation, layerGroup, style) {
 
     const newlink = new L.GeodesicPolyline(latLngs, style);
     newlink.addTo(layerGroup);
+  }
+}
+
+function resetZones(op) {
+  // remove all zones
+  for (const z of op.zones) {
+    console.log(z);
+    // create a new polygon, defined by z.points, in order
   }
 }
 
