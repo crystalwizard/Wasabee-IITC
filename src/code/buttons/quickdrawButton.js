@@ -189,7 +189,7 @@ const QuickDrawControl = L.Handler.extend({
       postToFirebase({ id: "analytics", action: "quickdrawMode" });
       this._toggleMode();
     }
-    if (e.originalEvent.key === "X") {
+    if (e.originalEvent.key === "X" || e.originalEvent.key === "x") {
       postToFirebase({ id: "analytics", action: "quickdrawClearAll" });
       this._operation.clearAllLinks();
       window.map.fire(
@@ -252,17 +252,17 @@ const QuickDrawControl = L.Handler.extend({
   },
 
   _portalClicked: function (data) {
-    // console.log(data);
+    // portal unselect
+    if (!data || !data.selectedPortalGuid) return;
+
     if (
       data.selectedPortalGuid == data.unselectedPortalGuid &&
       !this._firstSelect
     ) {
+      console.log(data);
       console.log("ignoring duplicate click");
       return;
     }
-
-    // portal unselect
-    if (!data.selectedPortalGuid) return;
 
     this._firstSelect = false;
 
@@ -277,10 +277,13 @@ const QuickDrawControl = L.Handler.extend({
       return;
     }
     if (this._drawMode == "quickdraw") {
+      console.log("QD layers", selectedPortal);
       this._portalClickedQD(selectedPortal);
     } else if (this._drawMode == "star") {
+      console.log("QD star", selectedPortal);
       this._portalClickedStar(selectedPortal);
     } else {
+      console.log("QD single link", selectedPortal);
       this._portalClickedSingle(selectedPortal);
     }
     window.map.fire("wasabee:uiupdate:buttons");
